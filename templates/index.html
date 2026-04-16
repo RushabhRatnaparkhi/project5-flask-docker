@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project 5 Flask App</title>
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #1d2b64;
+      --accent: #44d9e6;
+      --text: #ecf2ff;
+      --muted: #c5d0f5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% 10%, #243b88 0%, transparent 60%),
+                  linear-gradient(140deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(680px, 100%);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      animation: rise 500ms ease-out;
+    }
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      letter-spacing: 0.4px;
+    }
+    p { margin: 0 0 14px; color: var(--muted); }
+    code {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 2px 8px;
+      color: var(--accent);
+    }
+    .cta {
+      display: inline-block;
+      margin-top: 6px;
+      color: #07131f;
+      background: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Project 5: Flask App Ready</h1>
+    <p>This fresh Flask project is prepared for Docker and multi-cloud deployment.</p>
+    <p>Health endpoint: <code>/health</code></p>
+    <a class="cta" href="/health">Check Health</a>
+  </main>
+</body>
+</html>
