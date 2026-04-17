@@ -3,73 +3,298 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Project 5 Flask App</title>
+  <title>Daily Task Planner</title>
   <style>
     :root {
-      --bg1: #0b1020;
-      --bg2: #1d2b64;
-      --accent: #44d9e6;
-      --text: #ecf2ff;
-      --muted: #c5d0f5;
+      --bg-1: #f6f8fb;
+      --bg-2: #e9eef8;
+      --ink: #1d2840;
+      --muted: #5c6b86;
+      --panel: #ffffff;
+      --line: #d5deee;
+      --accent: #0f9d8a;
+      --accent-2: #0b7a6c;
+      --danger: #c23b4a;
+      --warn: #f4b400;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
+      font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1000px 400px at 10% 0%, #dbe6fb 0%, transparent 70%),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-2));
       min-height: 100vh;
-      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-      color: var(--text);
-      background: radial-gradient(1200px 600px at 20% 10%, #243b88 0%, transparent 60%),
-                  linear-gradient(140deg, var(--bg1), var(--bg2));
-      display: grid;
-      place-items: center;
-      padding: 24px;
     }
-    .card {
-      width: min(680px, 100%);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
+    .shell {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 22px;
+    }
+    .hero {
+      background: linear-gradient(130deg, #133b68, #196f9f 55%, #0f9d8a);
+      color: white;
       border-radius: 18px;
-      padding: 28px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-      animation: rise 500ms ease-out;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(14, 38, 68, 0.25);
     }
-    h1 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      letter-spacing: 0.4px;
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: 0.2px;
     }
-    p { margin: 0 0 14px; color: var(--muted); }
-    code {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      padding: 2px 8px;
-      color: var(--accent);
+    .hero p {
+      margin: 0;
+      opacity: 0.95;
     }
-    .cta {
-      display: inline-block;
-      margin-top: 6px;
-      color: #07131f;
-      background: var(--accent);
-      text-decoration: none;
+    .stats {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .stat {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .stat .label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      opacity: 0.9;
+    }
+    .stat .value {
+      font-size: 1.35rem;
       font-weight: 700;
-      padding: 10px 14px;
-      border-radius: 10px;
+      margin-top: 4px;
     }
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .layout {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 5px 18px rgba(20, 38, 68, 0.06);
+    }
+    .panel h2 {
+      margin: 2px 0 12px;
+      font-size: 1.06rem;
+    }
+    form {
+      display: grid;
+      gap: 10px;
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      font: inherit;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font: inherit;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-2); }
+    .btn-outline {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .chip {
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.9rem;
+      background: #fff;
+    }
+    .chip.active {
+      background: #dff5f2;
+      border-color: #a8e7de;
+      color: #0a5d52;
+      font-weight: 700;
+    }
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .task {
+      border: 1px solid var(--line);
+      border-left-width: 5px;
+      border-radius: 12px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      background: #fff;
+    }
+    .task.high { border-left-color: #d94859; }
+    .task.medium { border-left-color: #e5a60c; }
+    .task.low { border-left-color: #2d9d7e; }
+    .task.done {
+      opacity: 0.75;
+      background: #f5f8fb;
+    }
+    .title {
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .title.done { text-decoration: line-through; }
+    .meta {
+      color: var(--muted);
+      font-size: 0.87rem;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .notes {
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: start;
+    }
+    .btn-small {
+      padding: 6px 8px;
+      font-size: 0.86rem;
+      border-radius: 8px;
+    }
+    .btn-danger {
+      background: #fff2f4;
+      color: var(--danger);
+      border: 1px solid #f3c7ce;
+    }
+    .empty {
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      background: #fcfdff;
+    }
+    .footer-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1>Project 5: Flask App Ready</h1>
-    <p>This fresh Flask project is prepared for Docker and multi-cloud deployment.</p>
-    <p>Health endpoint: <code>/health</code></p>
-    <a class="cta" href="/health">Check Health</a>
-  </main>
+  <div class="shell">
+    <header class="hero">
+      <h1>Daily Task Planner</h1>
+      <p>A practical Flask app to capture, prioritize, track, and export your tasks.</p>
+      <div class="stats">
+        <div class="stat"><div class="label">Total</div><div class="value">{{ summary.total }}</div></div>
+        <div class="stat"><div class="label">Open</div><div class="value">{{ summary.open }}</div></div>
+        <div class="stat"><div class="label">Done</div><div class="value">{{ summary.done }}</div></div>
+        <div class="stat"><div class="label">Overdue</div><div class="value">{{ summary.overdue }}</div></div>
+        <div class="stat"><div class="label">Due Today</div><div class="value">{{ summary.due_today }}</div></div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>Add Task</h2>
+        <form method="post" action="/tasks">
+          <input name="title" placeholder="Task title" required>
+          <textarea name="notes" placeholder="Notes (optional)"></textarea>
+          <label>
+            Due date
+            <input type="date" name="due_date" min="{{ today }}">
+          </label>
+          <label>
+            Priority
+            <select name="priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
+          <button class="btn btn-primary" type="submit">Create Task</button>
+        </form>
+        <div class="footer-actions">
+          <a class="btn btn-outline" href="/export.csv">Export CSV</a>
+          <a class="btn btn-outline" href="/api/summary">API Summary</a>
+          <a class="btn btn-outline" href="/api/tasks">API Tasks</a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tasks</h2>
+        <nav class="filters" aria-label="Task filters">
+          <a class="chip {% if filter_mode == 'all' %}active{% endif %}" href="/?filter=all">All</a>
+          <a class="chip {% if filter_mode == 'open' %}active{% endif %}" href="/?filter=open">Open</a>
+          <a class="chip {% if filter_mode == 'done' %}active{% endif %}" href="/?filter=done">Done</a>
+          <a class="chip {% if filter_mode == 'overdue' %}active{% endif %}" href="/?filter=overdue">Overdue</a>
+        </nav>
+
+        {% if tasks %}
+        <ul class="task-list">
+          {% for task in tasks %}
+          <li class="task {{ task.priority }} {% if task.done == 1 %}done{% endif %}">
+            <div>
+              <div class="title {% if task.done == 1 %}done{% endif %}">{{ task.title }}</div>
+              <div class="meta">
+                <span>Priority: {{ task.priority|capitalize }}</span>
+                <span>Due: {{ task.due_date if task.due_date else 'No date' }}</span>
+                <span>Status: {{ 'Done' if task.done == 1 else 'Open' }}</span>
+              </div>
+              {% if task.notes %}<div class="notes">{{ task.notes }}</div>{% endif %}
+            </div>
+            <div class="actions">
+              <form method="post" action="/tasks/{{ task.id }}/toggle">
+                <button class="btn btn-small btn-outline" type="submit">
+                  {{ 'Reopen' if task.done == 1 else 'Complete' }}
+                </button>
+              </form>
+              <form method="post" action="/tasks/{{ task.id }}/delete" onsubmit="return confirm('Delete this task?');">
+                <button class="btn btn-small btn-danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <div class="empty">No tasks for this filter yet. Add one from the left panel.</div>
+        {% endif %}
+      </section>
+    </main>
+  </div>
 </body>
 </html>
